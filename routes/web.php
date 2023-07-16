@@ -18,6 +18,9 @@ use Illuminate\Http\Request;
 */
 
 
+Route::get('/', function(){
+    return redirect()->route('task.index');
+});
 Route::post('/task/reorden', function (Request $request) {
     $positions = json_decode($request->positions, true);
     foreach ($positions as $position) {
