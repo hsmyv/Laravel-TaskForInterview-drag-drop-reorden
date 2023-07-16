@@ -33,8 +33,8 @@ tr:nth-child(even) {
   @foreach ($users as $index => $user)
    <tr class="alert" draggable="true" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)">
     <td data-ad-id="<?php echo $user->id;?>"></td>
-    <td>{{$user->email}}</td>
     <td>{{$user->name}}</td>
+    <td>{{$user->email}}</td>
     <td>{{$user->position}}</td>
   </tr>
   @endforeach
