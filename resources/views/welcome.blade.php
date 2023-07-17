@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+            <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 <style>
@@ -24,28 +27,39 @@ tr:nth-child(even) {
 <body>
 
 <h2>HTML Table</h2>
-
+<form action="{{route('task.store')}}" method="POST">
+    @csrf
+    <input type="text" name="name">
+<button type="submit">
+    Add Task
+</button>
+</form>
 <table id="adTable">
     <thead>
   <tr>
     <th></th>
     <th>Name</th>
-    <th>Email</th>
     <th>Position</th>
+    <th>Delete</th>
   </tr>
   </thead>
   <tbody>
-  @foreach ($users as $index => $user)
+  @foreach ($tasks as $index => $task)
    <tr class="alert" draggable="true" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)">
-    <td data-ad-id="<?php echo $user->id;?>">
+    <td data-ad-id="<?php echo $task->id;?>">
       <label class="checkbox-wrap checkbox-primary">
         <input type="checkbox" checked>
         <span class="checkmark"></span>
       </label>
     </td>
-    <td>{{$user->name}}</td>
-    <td>{{$user->email}}</td>
-    <td>{{$user->position}}</td>
+    <td><a href="{{route('task.edit', $task->id)}}">{{$task->name}}</a></td>
+    <td>{{$task->position}}</td>
+    <td>
+         <form method="post" class="delete-form" data-route="{{route('task.destroy',$task->id)}}">
+                            @method('delete')
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+    </td>
   </tr>
   @endforeach
   </tbody>
@@ -57,6 +71,28 @@ tr:nth-child(even) {
 
 
 <script>
+     $(document).ready(function() {
+
+            $('.delete-form').on('submit', function(e) {
+              e.preventDefault();
+
+              $.ajax({
+                  type: 'post',
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  },
+                  url: $(this).data('route'),
+                  data: {
+                    '_method': 'delete'
+                  },
+                  success: function (response, textStatus, xhr) {
+                    window.location='/task'
+                  }
+              });
+            })
+          });
+
+
     var dragItem;
 
     function drag(event){
