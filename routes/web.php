@@ -25,7 +25,7 @@ Route::post('/', function (Request $request) {
     $positions = json_decode($request->positions, true);
     foreach ($positions as $position) {
         $user = User::find($position['id']);
-        $user->position = $position['position'];
-        $user->save();
+         $user->position = $position['position'];
+         $user->save();
     }
 })->name('drag.drop');

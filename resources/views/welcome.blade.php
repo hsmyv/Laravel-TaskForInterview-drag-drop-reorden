@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
 <style>
 table {
   font-family: arial, sans-serif;
@@ -24,20 +26,29 @@ tr:nth-child(even) {
 <h2>HTML Table</h2>
 
 <table id="adTable">
+    <thead>
   <tr>
     <th></th>
     <th>Name</th>
     <th>Email</th>
     <th>Position</th>
   </tr>
+  </thead>
+  <tbody>
   @foreach ($users as $index => $user)
    <tr class="alert" draggable="true" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)">
-    <td data-ad-id="<?php echo $user->id;?>"></td>
+    <td data-ad-id="<?php echo $user->id;?>">
+      <label class="checkbox-wrap checkbox-primary">
+        <input type="checkbox" checked>
+        <span class="checkmark"></span>
+      </label>
+    </td>
     <td>{{$user->name}}</td>
     <td>{{$user->email}}</td>
     <td>{{$user->position}}</td>
   </tr>
   @endforeach
+  </tbody>
 
 </table>
 
@@ -49,7 +60,7 @@ tr:nth-child(even) {
     var dragItem;
 
     function drag(event){
-        dragItem = event.target.closest("tr");
+        dragItem = event.target;
         event.dataTransfer.effectAllowed = "move";
         event.dataTransfer.setData("text/html", dragItem.outerHTML);
     }
